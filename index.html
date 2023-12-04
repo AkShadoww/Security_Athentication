@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page Design with Biometrics</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.min.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="login">
+        <form id="loginForm" action="home.html" method="get">
+            <h2>Hello <br><span>Welcome Back!</span></h2>
+            <div class="inputBox">
+                <i class="fas fa-user user-icon"></i>
+                <input type="text" name="username" placeholder="Username">
+            </div>
+            
+            <div class="inputBox">
+                <i class="fas fa-lock lock-icon"></i>
+                <input type="password" name="password" placeholder="Password">
+            </div>
+            
+            <label>
+                <input type="checkbox" name="keepLoggedIn">Keep me logged in
+            </label>
+            <div class="inputBox">
+                <input type="submit" value="Log in">
+            </div>
+        </form>
+        <h4>OR</h4>
+        <div class="fingerprint" id="fingerprintDiv">
+            <div class="fingerprintBox">
+                <img src="finger.png" height="64" width="80" alt="Fingerprint Image">
+            </div>
+            <p id="fingerprintStatus">Login with fingerprint</p>
+        </div>
+    </div>
+
+    <script>
+        const fingerprintDiv = document.getElementById('fingerprintDiv');
+        const fingerprintStatus = document.getElementById('fingerprintStatus');
+        const loginForm = document.getElementById('loginForm');
+
+        fingerprintDiv.addEventListener('click', async () => {
+            try {
+                const credential = await navigator.credentials.get({
+                    publicKey: {
+                        challenge: new Uint8Array([/* challenge bytes */]),
+                        userVerification: 'required',
+                        authenticatorSelection: {
+                            // Add your authenticator selection options here
+                        },
+                    },
+                });
+
+                // You can use the credential information for authentication
+                // For example, you can send the credential.id to the server for verification
+
+                fingerprintStatus.innerText = 'Fingerprint authentication successful!';
+                // You can also submit the form programmatically if needed
+                // loginForm.submit();
+            } catch (error) {
+                console.error('Fingerprint authentication failed:', error);
+                fingerprintStatus.innerText = 'Fingerprint authentication failed.';
+            }
+        });
+    </script>
+</body>
+</html>
